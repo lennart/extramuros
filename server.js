@@ -1,17 +1,21 @@
 // required dependencies
 require('coffee-script');
 var express = require('express');
+var BC = require('browserchannel').server;
+var BCSocket = require('browserchannel').BCSocket;
+var livedb = require('livedb');
 var sharejs = require('share');
 var nopt = require('nopt');
 var zmq = require('zmq');
 var WebSocket = require('ws');
 var osc = require('osc');
+var Duplex = require('stream').Duplex;
 
 // global variables
 var stderr = process.stderr;
 
 // parse command-line options
-var knownOpts = { 
+var knownOpts = {
     "password" : [String, null],
     "http-port" : [Number, null],
     "zmq-port" : [Number, null],
@@ -57,9 +61,14 @@ if(password == null) {
     stderr.write("Error: --password option is not optional!\n");
     process.exit(1);
 }
+var serverdb = livedb.client(livedb.memory());
+var share = sharejs.server.createClient({backend: serverdb });
+//var shareclient =
 
 var server = express();
 server.use(express.static(__dirname));
+console.log("[sharejs:root]", sharejs.scriptsDir);
+server.use(express.static(sharejs.scriptsDir));
 
 var pub = zmq.socket('pub');
 var zmqAddress = "tcp://*:" + zmqPort.toString();
@@ -75,17 +84,45 @@ var stdin = process.openStdin();
 stdin.addListener("data", function (d) { pub.send(d); });
 
 var options = {
-  db: {type: 'none'},
-  browserChannel: {cors: '*'},
-  auth: function(client, action) {
-    // This auth handler rejects any ops bound for docs starting with 'readonly'.
-    if (action.name === 'submit op' && action.docName.match(/^readonly/)) {
-      action.reject();
-    } else {
-      action.accept();
-    }
-  }
+  browserChannel: {cors: '*'}
 };
+
+
+var ssocket = new BCSocket('http://localhost:8000/channel')
+    var sjs = new sharejs.client.Connection(ssocket);
+
+// sjs.debug = true;
+
+server.use(BC(options, function(client) {
+    var stream = new Duplex({ objectMode: true });
+    stream._write = function(chunk, encoding, cb) {
+        client.send(JSON.stringify(chunk));
+        cb();
+    };
+
+    stream._read = function(){};
+
+    stream.on("error", function(err) {
+        client.close(err);
+    });
+
+    client.on("message", function(data) {
+        stream.push(data);
+        stream.emit("close");
+    });
+
+    client.on("close", function(reason) {
+        stream.push(null);
+        stream.emit("close");
+    });
+
+    stream.on("end", function() {
+        client.close();
+    });
+
+    share.listen(stream);
+}));
+
 
 var wss = new WebSocket.Server({port: wsPort});
 stderr.write("extramuros: listening for WebSocket connections on port " + wsPort.toString()+"\n");
@@ -103,6 +140,8 @@ if(oscPort != null) {
     stderr.write("extramuros: listening for OSC on UDP port " + udpPort.toString()+"\n");
 }
 
+
+
 wss.on('connection',function(ws) {
     // route incoming OSC back to browsers
     var udpListener = function(m) {
@@ -115,6 +154,8 @@ wss.on('connection',function(ws) {
 	catch(e) { stderr.write("warning: exception in WebSocket send\n"); }
     };
     if(udp!=null) udp.addListener("message",udpListener);
+
+
     ws.on("message",function(m) {
 	var n = JSON.parse(m);
 	if(n.request == "eval") {
@@ -140,16 +181,31 @@ wss.on('connection',function(ws) {
     });
     ws.on("close",function(code,msg) {
 	console.log("");
+        console.log("closing client");
+        ws.close(code);
 	if(udp!=null)udp.removeListener("message",udpListener);
     });
+
 });
 
 if(udp!=null)udp.open();
 
 function evaluateBuffer(name) {
-    sharejs.client.open(name,'text','http://127.0.0.1:' + httpPort + '/channel', function (err,doc) {
-	console.log(doc.getText());
-	pub.send(doc.getText());
+    console.log("[eval:buffer]", name);
+    var doc = sjs.get('extramuros', name, function(err, data) {
+        if (err) {
+            console.error("[doc:refresh] failed", err);
+        }
+        else {
+            console.log("[doc:refresh]", data);
+        }
+    });
+
+    doc.subscribe();
+
+   doc.whenReady(function() {
+        console.log("[doc:ready]", doc.snapshot);
+       pub.send(doc.snapshot);
     });
 }
 
@@ -171,7 +227,6 @@ function forwardFeedbackFromClient(text) {
     catch(e) { stderr.write("warning: exception in WebSocket broadcast\n"); }
 }
 
-var shareserver = sharejs.server.attach(server, options);
 
 server.get('/?', function(req, res, next) {
   res.writeHead(302, {location: '/index.html'});

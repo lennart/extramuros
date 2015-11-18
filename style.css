@@ -1,4 +1,10 @@
+/* padding is included in width/height */
+* {
+    box-sizing: border-box;
+}
+
 body {
+    font-family: "Helvetica Neue";
   background: black;
   color: white;
 }
@@ -6,7 +12,15 @@ body {
 textarea {
   background: transparent;
   color: white;
-  width: 400px;
+  width: 100%;
+  font-family: "Source Code Pro", "Menlo", "Courier New", monospace;
+}
+
+input {
+    border: 1px solid gray;
+    line-height: 1.5;
+    /*    height: 20px;*/
+    padding: 3px 6px;
 }
 
 .text {
@@ -14,23 +28,77 @@ textarea {
   color: white;
 }
 
-.evalButton {
+.eval-button {
   background: darkGrey;
   color: white;
+  padding: 5px 8px;
+  line-height: 1.5;
+  border: none;
+}
+
+.row {
+    clear: both;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.CodeMirror {
+    height: 4.5rem;
+}
+
+.label-column {
+    width: 15%;
+    float: left;
+    text-align: right;
+}
+
+.field-column {
+    width: 85%;
+    float: left;
+}
+
+#password-dialog {
+    z-index: 0;
+    display: none;
+}
+
+#password-dialog.active {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: block;
+    background-color: black;
+    z-index: 100;
+}
+
+#password-dialog form {
+    height: 100px;
+    width: 200px;
+    padding-top: 50%;
+    margin: auto;
+    margin-top: -50px;
 }
 
 #global {
-padding: 20px; 
-position: absolute; 
-left: 0px;
-top: 0px;
-width: 100%;
-height: 100%; 
+    display: none;
+    padding: 20px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+
+#global.active {
+    display: block;
 }
 
 canvas {
 background: transparent;
-position: absolute; 
+position: absolute;
 left: 0px;
 top: 0px;
 }

@@ -1,5 +1,7 @@
 var ws;
-
+var editors = {};
+var sjs;
+var password;
 function Osc() {}
 jQuery.extend(Osc.prototype,jQuery.eventEmitter);
 var osc = new Osc();
@@ -9,6 +11,8 @@ function setup(nEditors) {
     var url = 'ws://' + location.hostname + ':8002';
     console.log("attempting websocket connection to " + url);
     ws = new WebSocket(url);
+    var socket = new BCSocket(null, { reconnect: true });
+    sjs = new sharejs.Connection(socket);
     ws.onopen = function () {
 	console.log("extramuros websocket connection opened");
     };
@@ -51,18 +55,39 @@ function setup(nEditors) {
 
 
 function getPassword() {
-    var x = document.getElementById('password').value;
-    if(x == null || x == "") {
-	alert("You must enter a password to evaluate code.");
-	return null;
-    }
-    return x;
+    return password;
 }
+
+function queryPassword() {
+    var dialog = document.getElementById('password-dialog');
+
+    dialog.className = "active"; // show
+    dialog.querySelector("form").onsubmit = function(e) {
+        var x = dialog.querySelector("#password").value;
+        if(x == null || x == "") {
+	    alert("You must enter a password to evaluate code.");
+	    return null;
+        }
+        password = x
+        dialog.className = ""; // hide
+        document.getElementById("global").className = "active";
+        var numEditors = document.querySelector("body").dataset.editors
+        setup(numEditors);
+        e.preventDefault();
+    }
+}
+
+queryPassword();
 
 function evaluateBuffer(name) {
     var password = getPassword();
     if(password) {
+        // editors[name].save();
 	var msg = { request: "eval", bufferName: name, password: password };
+        var content = editors[name].getValue();
+        console.log("[buffer:content]", content);
+
+
 	ws.send(JSON.stringify(msg));
     }
 }
@@ -78,13 +103,37 @@ function evaluateJavaScriptGlobally(code) {
 function openEditor(name) {
     var elem = document.getElementById(name);
     if( elem != null) {
-	sharejs.open(name,'text',function(error,doc) {
-	    if(error) console.log(error);
-	    else {
+        var doc = sjs.get('extramuros', name, function(err, data) {
+            if (err) {
+                console.error("[open:editor]", err);
+            }
+            else {
+                console.log("[open:editor]", data);
+            }
+        });
+
+        doc.fetch();
+       doc.whenReady(function() {
+            if (!doc.type) { doc.create('text'); }
+
+            if (doc.type && doc.type.name === 'text') {
 		elem.disabled = false;
-		doc.attach_textarea(elem);
-	    }
-	});
+
+                editors[name] = CodeMirror.fromTextArea(elem, {
+                    mode: 'haskell',
+                    theme: 'zenburn',
+
+                });
+                editors[name].addKeyMap({
+                    'Shift-Enter': function(cm) {
+                        console.log("[kbd:eval]", name);
+                        evaluateBuffer(name);
+                        // cm.setSelection()
+                    }
+                });
+		doc.attachCodeMirror(editors[name]);
+            }
+       });
     }
 }
 
@@ -102,11 +151,11 @@ function setupKeyboardHandlers() {
 	    var code = $(this).val();
 	    eval(code);
 	}
-	else if(event.which == 13 && event.shiftKey) {
-	    // shift+Enter: evaluate buffer globally through the server   
-	    event.preventDefault();
-	    evaluateBuffer(event.target.id);
-	}
+	// else if(event.which == 13 && event.shiftKey) {
+	//     // shift+Enter: evaluate buffer globally through the server
+	//     event.preventDefault();
+	//     evaluateBuffer(event.target.id);
+	// }
 	else if(event.which == 67 && event.ctrlKey && event.shiftKey) {
 	    // ctrl+shift+c: global clear() on visuals
 	    event.preventDefault();
@@ -131,13 +180,13 @@ function setupKeyboardHandlers() {
 }
 
 // path = "/play",
-// params = [  
-//1// S "sound" Nothing,     
-//2// F "offset" (Just 0),   
-//3// F "begin" (Just 0),     
-//4// F "end" (Just 1),      
-//5// F "speed" (Just 1),       
-//6// F "pan" (Just 0.5),     
+// params = [
+//1// S "sound" Nothing,
+//2// F "offset" (Just 0),
+//3// F "begin" (Just 0),
+//4// F "end" (Just 1),
+//5// F "speed" (Just 1),
+//6// F "pan" (Just 0.5),
 //7// F "velocity" (Just 0),
 //8// S "vowel" (Just ""),
 //9// F "cutoff" (Just 0),

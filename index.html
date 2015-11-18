@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>extramuros</title>
+  <title>extramuros</title>
+  <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/zenburn.css">
  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-<body onload="setup(3)">
-<div id="global">
-<table>
+<body data-editors=3>
+  <div id="global">
+    <div class="row">
+      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit1');"/></div>
+      <div class="field-column"><textarea id="edit1" rows="6" disabled>******</textarea></div>
+    </div>
 
-<tr>
-<td></td>
-<td>Password: <input type="password" name="password" length="32" id="password" class="text"/></td>
-</tr>
+    <div class="row">
+      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit2');"/></div>
+      <div class="field-column"><textarea id="edit2" rows="6" disabled>******</textarea></div>
+    </div>
 
-<tr>
-<td><input type="button" value="eval" class="evalButton" onclick="evaluateBuffer('edit1');"/></td>
-<td><textarea id="edit1" rows="6" disabled>******</textarea></td>
-</tr>
+    <div class="row">
+      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit3');"/></div>
+      <div class="field-column"><textarea id="edit3" rows="6" disabled>******</textarea></div>
+    </div>
 
-<tr>
-<td><input type="button" value="eval" class="evalButton" onclick="evaluateBuffer('edit2');"/></td>
-<td><textarea id="edit2" rows="6" disabled>******</textarea></td>
-</tr>
+    <div class="row">
+      <div class="content-column"><textarea id="feedback" rows="6" disabled></textarea></div>
+  </div>
 
-<tr>
-<td><input type="button" value="eval" class="evalButton" onclick="evaluateBuffer('edit3');"/></td>
-<td><textarea id="edit3" rows="6" disabled>******</textarea></td>
-</tr>
+  </div>
 
-<tr>
-<td colspan="2"><textarea id="feedback" rows="6" disabled style="width: 445px;"></textarea></td>
-</tr>
-
-</table>
+  <div id="password-dialog" class="active">
+    <div class="content-column">
+      <form><label for="password">Password:</label> <input type="password" name="password" length="32" id="password" autofocus class="text"/>
+        <button type="submit" class="btn">Go!</button>
+      </form>
+    </div>
+  </div>
 
 <script src="/channel/bcsocket.js"></script>
-<script src="/share/share.uncompressed.js"></script>
-<script src="/share/textarea.js"></script>
-<script src="/share/json.js"></script>
+<script src="/share.js"></script>
 <script src="jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="bower_components/codemirror/lib/codemirror.js"></script>
+<script src="bower_components/share-codemirror/share-codemirror.js"></script>
+<script src="bower_components/codemirror/mode/haskell/haskell.js"></script>
 <script src="browser.js"></script>
 <script src="visuals.js"></script>
 <script src="misc.js"></script>

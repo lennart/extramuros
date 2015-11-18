@@ -1,13 +1,14 @@
 {
-    "name": "extramuros",
-    "version": "0.0.3",
-    "dependencies": {
-	"express": "*",
-	"ws": "*",
-	"osc": "*",
-	"coffee-script": "*",
-	"zmq": "*",
-	"share": "0.6.3",
-	"nopt": "*"
-    }
+  "name": "extramuros",
+  "version": "0.0.3",
+  "dependencies": {
+    "browserchannel": "^2.0.0",
+    "coffee-script": "*",
+    "express": "*",
+    "nopt": "*",
+    "osc": "*",
+    "share": "0.7.40",
+    "ws": "*",
+    "zmq": "*"
+  }
 }
