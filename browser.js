@@ -1,7 +1,7 @@
 var ws;
 var editors = {};
 var sjs;
-var modes = [ "haskell", "javascript" ];
+var modes = [ "tidal", "javascript" ];
 var password;
 var assert = ((typeof console.assert) === "function") ? function () { console.assert.apply(console, arguments) } : function() {};
 function Osc() {}
@@ -171,21 +171,26 @@ function openEditor(name) {
 		elem.disabled = false;
 
                 editors[name] = CodeMirror.fromTextArea(elem, {
-                    mode: 'haskell',
-                    theme: 'zenburn',
+                    mode: modes[0],
+                    theme: 'rubyblue',
                     inputStyle: 'contenteditable',
-                    viewportMargin: Infinity
-                });
-                editors[name].addKeyMap({
-                    'Shift-Enter': function(cm) {
-                        console.log("[kbd:eval]", name);
-                        evaluateBuffer(name);
-                        // cm.setSelection()
-                    },
-                    'Ctrl-Enter': function(cm) {
-                        var code = cm.getValue();
-                        eval(code);
-                        console.log("[kbd:js:eval]", code);
+                    viewportMargin: Infinity,
+                    extraKeys: {
+                        'Shift-Enter': function(cm) {
+                            console.log("[kbd:eval]", name);
+                            evaluateBuffer(name);
+                        },
+                        'Ctrl-Enter': function(cm) {
+                            var code = cm.getValue();
+                            eval(code);
+                            console.log("[kbd:js:eval]", code);
+                        },
+                        'Tab': function(cm) {
+                            var indentUnit = cm.getOption("indentUnit");
+                            console.log("[tab]", indentUnit);
+                            var spaces = Array(indentUnit + 1).join(" ");
+                            cm.replaceSelection(spaces);
+                        }
                     }
                 });
 		doc.attachCodeMirror(editors[name]);

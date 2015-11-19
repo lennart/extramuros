@@ -10,7 +10,11 @@ body {
 }
 
 * {
-    font-family: "Source Code Pro", "Menlo", "Courier New", monospace;
+    font-family: "Source Code Pro", "Menlo", "Courier New", monospace !important;
+    font-weight: normal !important;
+    line-height: 20px !important;
+    letter-spacing: 0 !important;
+    font-size: 100% !important;
 }
 
 textarea {
@@ -19,14 +23,20 @@ textarea {
   border: none;
   width: 100%;
   flex: 1;
-  font-size: 60%;
+  /* font-size: 60%; */
 }
+
 
 input {
     border: 1px solid gray;
     line-height: 1.5;
     /*    height: 20px;*/
     padding: 3px 6px;
+}
+
+
+label {
+    color: #888;
 }
 
 .text {
@@ -58,6 +68,7 @@ input {
     height: auto;
     display: flex;
     flex-direction: column;
+    background-color: transparent !important;
 }
 
 .CodeMirror-scroll {
