@@ -4,16 +4,22 @@
 }
 
 body {
-    font-family: "Helvetica Neue";
+  font-family: "Source Code Pro", "Menlo", "Courier New", monospace;
   background: black;
   color: white;
 }
 
+* {
+    font-family: "Source Code Pro", "Menlo", "Courier New", monospace;
+}
+
 textarea {
-  background: transparent;
+   background: transparent;
   color: white;
+  border: none;
   width: 100%;
-  font-family: "Source Code Pro", "Menlo", "Courier New", monospace;
+  flex: 1;
+  font-size: 60%;
 }
 
 input {
@@ -29,32 +35,48 @@ input {
 }
 
 .eval-button {
-  background: darkGrey;
+  background: #555;
   color: white;
   padding: 5px 8px;
   line-height: 1.5;
   border: none;
+  margin-bottom: 0.5em;
+  flex: 0 1 auto;
 }
 
-.row {
-    clear: both;
-    overflow: hidden;
-    margin-bottom: 1rem;
+.feedback, .editor {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    align-content: stretch;
+    justify-content: flex-start;
+    flex: 1 1 auto;
 }
 
 .CodeMirror {
-    height: 4.5rem;
+    flex: 1 1 auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-.label-column {
-    width: 15%;
-    float: left;
+.CodeMirror-scroll {
+    flex: 1 1 auto;
+}
+
+.editor .sidebar {
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    padding: 5px;
 }
 
-.field-column {
-    width: 85%;
-    float: left;
+.content {
+    flex: 1 1 auto;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
 #password-dialog {
@@ -71,29 +93,35 @@ input {
     display: block;
     background-color: black;
     z-index: 100;
+    display: flex;
+    flex-direction: column;
 }
 
 #password-dialog form {
-    height: 100px;
-    width: 200px;
-    padding-top: 50%;
+    flex: 0 1 auto;
+    /* height: 100px; */
+    /* width: 200px; */
+    /* padding-top: 50%; */
     margin: auto;
-    margin-top: -50px;
+    /* margin-top: -50px; */
 }
 
 #global {
     display: none;
     padding: 20px;
     position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
 }
 
 
 #global.active {
     display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 canvas {
@@ -101,4 +129,6 @@ background: transparent;
 position: absolute;
 left: 0px;
 top: 0px;
+bottom: 0;
+right: 0;
 }

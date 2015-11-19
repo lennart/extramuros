@@ -3,11 +3,13 @@
   "version": "0.0.3",
   "dependencies": {
     "browserchannel": "^2.0.0",
+    "codemirror": "^5.8.0",
     "coffee-script": "*",
     "express": "*",
     "nopt": "*",
     "osc": "*",
     "share": "0.7.40",
+    "share-codemirror": "^0.1.0",
     "ws": "*",
     "zmq": "*"
   }

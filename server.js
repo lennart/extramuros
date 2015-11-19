@@ -5,6 +5,7 @@ var BC = require('browserchannel').server;
 var BCSocket = require('browserchannel').BCSocket;
 var livedb = require('livedb');
 var sharejs = require('share');
+var shareCodeMirror = require('share-codemirror');
 var nopt = require('nopt');
 var zmq = require('zmq');
 var WebSocket = require('ws');
@@ -69,6 +70,9 @@ var server = express();
 server.use(express.static(__dirname));
 console.log("[sharejs:root]", sharejs.scriptsDir);
 server.use(express.static(sharejs.scriptsDir));
+server.use(express.static(__dirname + '/node_modules/codemirror/lib'));
+server.use(express.static(__dirname + '/bower_components'));
+server.use(express.static(shareCodeMirror.scriptsDir));
 
 var pub = zmq.socket('pub');
 var zmqAddress = "tcp://*:" + zmqPort.toString();

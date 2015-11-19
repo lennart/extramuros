@@ -17,7 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "codemirror": "~5.8.0",
-    "share-codemirror": "~0.1.0"
+    "codemirror": "~5.8.0"
   }
 }

@@ -2,36 +2,36 @@
 <html>
 <head>
   <title>extramuros</title>
-  <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
-  <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/zenburn.css">
- <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="codemirror.css">
+  <link rel="stylesheet" type="text/css" href="codemirror/theme/zenburn.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body data-editors=3>
   <div id="global">
-    <div class="row">
-      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit1');"/></div>
-      <div class="field-column"><textarea id="edit1" rows="6" disabled>******</textarea></div>
+    <div class="editor">
+      <div class="sidebar" data-editor="edit1"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit1');"/></div>
+      <div class="content"><textarea id="edit1" rows="6" disabled>******</textarea></div>
     </div>
 
-    <div class="row">
-      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit2');"/></div>
-      <div class="field-column"><textarea id="edit2" rows="6" disabled>******</textarea></div>
+    <div class="editor">
+      <div class="sidebar" data-editor="edit2"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit2');"/></div>
+      <div class="content"><textarea id="edit2" rows="6" disabled>******</textarea></div>
     </div>
 
-    <div class="row">
-      <div class="label-column"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit3');"/></div>
-      <div class="field-column"><textarea id="edit3" rows="6" disabled>******</textarea></div>
+    <div class="editor">
+      <div class="sidebar" data-editor="edit3"><input type="button" value="eval" class="eval-button" onclick="evaluateBuffer('edit3');"/></div>
+      <div class="content"><textarea id="edit3" rows="6" disabled>******</textarea></div>
     </div>
 
-    <div class="row">
-      <div class="content-column"><textarea id="feedback" rows="6" disabled></textarea></div>
+    <div class="feedback">
+      <div class="content"><textarea id="feedback" rows="6" disabled></textarea></div>
   </div>
 
   </div>
 
   <div id="password-dialog" class="active">
-    <div class="content-column">
+    <div class="content">
       <form><label for="password">Password:</label> <input type="password" name="password" length="32" id="password" autofocus class="text"/>
         <button type="submit" class="btn">Go!</button>
       </form>
@@ -42,9 +42,10 @@
 <script src="/share.js"></script>
 <script src="jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="bower_components/codemirror/lib/codemirror.js"></script>
-<script src="bower_components/share-codemirror/share-codemirror.js"></script>
-<script src="bower_components/codemirror/mode/haskell/haskell.js"></script>
+<script src="/codemirror.js"></script>
+<script src="/share-codemirror.js"></script>
+<script src="/codemirror/mode/haskell/haskell.js"></script>
+<script src="/codemirror/mode/javascript/javascript.js"></script>
 <script src="browser.js"></script>
 <script src="visuals.js"></script>
 <script src="misc.js"></script>

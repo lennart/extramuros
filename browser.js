@@ -1,7 +1,9 @@
 var ws;
 var editors = {};
 var sjs;
+var modes = [ "haskell", "javascript" ];
 var password;
+var assert = ((typeof console.assert) === "function") ? function () { console.assert.apply(console, arguments) } : function() {};
 function Osc() {}
 jQuery.extend(Osc.prototype,jQuery.eventEmitter);
 var osc = new Osc();
@@ -51,6 +53,7 @@ function setup(nEditors) {
     for(var x=1;x<=nEditors;x++) openEditor('edit' + x.toString());
     setupKeyboardHandlers();
     setupVisuals();
+    populateModeSelectors();
 }
 
 
@@ -78,6 +81,54 @@ function queryPassword() {
 }
 
 queryPassword();
+
+function populateModeSelectors() {
+    var sidebars = [].slice.call(document.querySelectorAll(".editor .sidebar"));
+
+    var mkOption = function(name, value) {
+        var key = name + "-mode";
+        var input = document.createElement('input');
+        var label = document.createElement('label');
+        var text = document.createTextNode(value);
+        input.type = "radio";
+        input.name = key;
+        input.value = value;
+        input.dataset.editor = name;
+
+        label.appendChild(input);
+        label.appendChild(text);
+
+        return label;
+    };
+    var mkLabel =
+    sidebars.forEach(function(s) {
+        var name = s.dataset.editor;
+        assert(name.length, "editor name is empty");
+        modes.forEach(function(m) {
+            var opt = mkOption(name, m);
+
+            s.appendChild(opt);
+        });
+
+        var radios = [].slice.call(s.querySelectorAll("[type=radio]"));
+        radios.forEach(function(r) {
+            r.addEventListener('change', changeMode);
+        });
+    });
+
+
+}
+
+function changeMode(event) {
+    var name = this.dataset.editor;
+    var mode = this.value;
+    var cm = editors[name];
+
+    assert(cm, cm);
+
+    cm.setOption("mode", mode);
+    assert(cm.getOption("mode") == mode, mode);
+}
 
 function evaluateBuffer(name) {
     var password = getPassword();
@@ -112,7 +163,7 @@ function openEditor(name) {
             }
         });
 
-        doc.fetch();
+       doc.subscribe();
        doc.whenReady(function() {
             if (!doc.type) { doc.create('text'); }
 
@@ -122,13 +173,19 @@ function openEditor(name) {
                 editors[name] = CodeMirror.fromTextArea(elem, {
                     mode: 'haskell',
                     theme: 'zenburn',
-
+                    inputStyle: 'contenteditable',
+                    viewportMargin: Infinity
                 });
                 editors[name].addKeyMap({
                     'Shift-Enter': function(cm) {
                         console.log("[kbd:eval]", name);
                         evaluateBuffer(name);
                         // cm.setSelection()
+                    },
+                    'Ctrl-Enter': function(cm) {
+                        var code = cm.getValue();
+                        eval(code);
+                        console.log("[kbd:js:eval]", code);
                     }
                 });
 		doc.attachCodeMirror(editors[name]);
@@ -145,12 +202,13 @@ function setupKeyboardHandlers() {
 	    var code = $(this).val();
 	    evaluateJavaScriptGlobally(code);
 	}
-	else if(event.which == 13 && event.ctrlKey) {
-	    // ctrl+Enter: evaluate text as JavaScript in local browser
-	    event.preventDefault();
-	    var code = $(this).val();
-	    eval(code);
-	}
+	// else if(event.which == 13 && event.ctrlKey) {
+	//     // ctrl+Enter: evaluate text as JavaScript in local browser
+	//     event.preventDefault();
+	//     var code = $(this).val();
+	//     eval(code);
+        //     console.log("js eval");
+	// }
 	// else if(event.which == 13 && event.shiftKey) {
 	//     // shift+Enter: evaluate buffer globally through the server
 	//     event.preventDefault();
