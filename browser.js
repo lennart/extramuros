@@ -132,9 +132,19 @@ function evaluateBuffer(name) {
   var password = getPassword();
   if(password) {
     var msg = { request: "eval", bufferName: name, password: password };
+    var editor = document.querySelector("#" + name).parentNode;
     var content = editors[name].getValue();
     console.log("[buffer:content]", content);
 
+    var animationEnd;
+
+    animationEnd = function() {
+      editor.classList.remove("animated");
+      editor.removeEventListener("animationend", animationEnd);
+    };
+
+    editor.addEventListener("animationend", animationEnd);
+    editor.classList.add("animated");
     ws.send(JSON.stringify(msg));
   }
 }

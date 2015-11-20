@@ -14,7 +14,7 @@ body {
   font-weight: normal !important;
   line-height: 20px !important;
   letter-spacing: 0 !important;
-  font-size: 100% !important;
+  font-size: 98% !important;
 }
 
 textarea {
@@ -82,6 +82,16 @@ label {
   flex-direction: column;
   flex: 0 1 auto;
   padding: 5px;
+}
+
+@keyframes highlight {
+  from { background-color: rgb(0,0,0,0); }
+  to { background-color: #909; }
+}
+
+.content.animated {
+  animation-name: highlight;
+  animation-duration: 0.12s;
 }
 
 .content {
