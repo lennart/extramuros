@@ -1,6 +1,6 @@
 /* padding is included in width/height */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
@@ -10,33 +10,30 @@ body {
 }
 
 * {
-    font-family: "Source Code Pro", "Menlo", "Courier New", monospace !important;
-    font-weight: normal !important;
-    line-height: 20px !important;
-    letter-spacing: 0 !important;
-    font-size: 100% !important;
+  font-family: "Source Code Pro", "Menlo", "Courier New", monospace !important;
+  font-weight: normal !important;
+  line-height: 20px !important;
+  letter-spacing: 0 !important;
+  font-size: 100% !important;
 }
 
 textarea {
-   background: transparent;
+  background: transparent;
   color: white;
   border: none;
   width: 100%;
   flex: 1;
-  /* font-size: 60%; */
 }
 
 
 input {
-    border: 1px solid gray;
-    line-height: 1.5;
-    /*    height: 20px;*/
-    padding: 3px 6px;
+  border: 1px solid gray;
+  line-height: 1.5;
+  padding: 3px 6px;
 }
 
-
 label {
-    color: #888;
+  color: #888;
 }
 
 .text {
@@ -55,91 +52,91 @@ label {
 }
 
 .feedback, .editor {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    align-content: stretch;
-    justify-content: flex-start;
-    flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  align-content: stretch;
+  justify-content: flex-start;
+  flex: 1 1 10%;
+}
+
+.editor:nth-child(2n) {
+  background-color: #222;
 }
 
 .CodeMirror {
-    flex: 1 1 auto;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    background-color: transparent !important;
+  flex: 1 1 auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent !important;
 }
 
 .CodeMirror-scroll {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .editor .sidebar {
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    flex: 0 1 auto;
-    padding: 5px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  padding: 5px;
 }
 
 .content {
-    flex: 1 1 auto;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
+  flex: 1 1 80%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 #password-dialog {
-    z-index: 0;
-    display: none;
+  z-index: 0;
+  display: none;
 }
 
 #password-dialog.active {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    display: block;
-    background-color: black;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: block;
+  background-color: black;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
 }
 
 #password-dialog form {
-    flex: 0 1 auto;
-    /* height: 100px; */
-    /* width: 200px; */
-    /* padding-top: 50%; */
-    margin: auto;
-    /* margin-top: -50px; */
+  flex: 0 1 auto;
+  margin: auto;
 }
 
 #global {
-    display: none;
-    padding: 20px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
+  display: none;
+  padding: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
 }
 
 
 #global.active {
-    display: block;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 canvas {
-background: transparent;
-position: absolute;
-left: 0px;
-top: 0px;
-bottom: 0;
-right: 0;
+  background: transparent;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0;
+  right: 0;
 }

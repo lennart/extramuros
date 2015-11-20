@@ -12,5 +12,9 @@
     "share-codemirror": "^0.1.0",
     "ws": "*",
     "zmq": "*"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.1.0",
+    "postcss-cli": "^2.3.2"
   }
 }
